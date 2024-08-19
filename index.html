@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Saúde - Completa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .form-control {
+            background-color: #f0f2f5;
+            border: none;
+            border-radius: 8px;
+        }
+        .btn-calculate, .btn-next {
+            background-color: #fc2d61;
+            color: #fff;
+            border-radius: 50px;
+            padding: 10px 25px;
+            border: none;
+        }
+        .btn-calculate:hover, .btn-next:hover {
+            background-color: #e02654;
+        }
+        .result-box {
+            background-color: #f0f2f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .animate-step {
+            animation: fadeIn 1s ease-in-out;
+        }
+        .step-active {
+            display: block;
+        }
+        .step-hidden {
+            display: none;
+        }
+        .toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .suggestion-box {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="text-center mb-5">Calculadora de Saúde - Completa</h1>
+
+        <!-- Step 1: Perguntas Iniciais -->
+        <div id="step1" class="step-active animate-step">
+            <h2 class="text-center mb-4">Passo 1: Insira seus dados</h2>
+            <form id="step1Form">
+                <div class="mb-3">
+                    <label for="age" class="form-label">Idade (anos)</label>
+                    <input type="number" class="form-control" id="age" required>
+                </div>
+                <div class="mb-3">
+                    <label for="weight" class="form-label">Peso (kg)</label>
+                    <input type="number" class="form-control" id="weight" required>
+                </div>
+                <button type="submit" class="btn btn-next w-100 mt-3">Avançar</button>
+            </form>
+        </div>
+
+        <!-- Step 2: Pergunta sobre Altura e Gênero -->
+        <div id="step2" class="step-hidden animate-step">
+            <h2 class="text-center mb-4">Passo 2: Continue preenchendo seus dados</h2>
+            <form id="step2Form">
+                <div class="mb-3">
+                    <label for="height" class="form-label">Altura (cm)</label>
+                    <input type="number" class="form-control" id="height" required>
+                </div>
+                <div class="mb-4">
+                    <label for="gender" class="form-label">Gênero</label>
+                    <select class="form-control" id="gender" required>
+                        <option value="male">Masculino</option>
+                        <option value="female">Feminino</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-next w-100 mt-3">Avançar</button>
+            </form>
+        </div>
+
+        <!-- Step 3: Circunferência Opcional -->
+        <div id="step3" class="step-hidden animate-step">
+            <h2 class="text-center mb-4">Passo 3: Dados Opcionais</h2>
+            <form id="step3Form">
+                <div class="mb-3">
+                    <label for="waist" class="form-label">Circunferência da Cintura (cm) - Opcional</label>
+                    <input type="number" class="form-control" id="waist">
+                </div>
+                <div class="mb-3">
+                    <label for="neck" class="form-label">Circunferência do Pescoço (cm) - Opcional</label>
+                    <input type="number" class="form-control" id="neck">
+                </div>
+                <button type="submit" class="btn btn-next w-100 mt-3">Avançar</button>
+            </form>
+        </div>
+
+        <!-- Step 4: Resultados -->
+        <div id="step4" class="step-hidden animate-step">
+            <h2 class="text-center mb-4">Passo 4: Resultados</h2>
+            <div class="result-box">
+                <h3>TMB Calculada: <span id="finalTMB"></span> kcal/dia</h3>
+                <h3>IMC Calculado: <span id="finalIMC"></span></h3>
+                <h3>Peso Ideal: <span id="finalIdealWeight"></span> kg</h3>
+                <h3>Percentual de Gordura Corporal: <span id="finalBodyFat"></span>%</h3>
+                <h3>Necessidade Calórica Diária: <span id="finalCaloricNeeds"></span> kcal</h3>
+            </div>
+            <button class="btn btn-next w-100 mt-3" onclick="goToNextStep()">Avançar</button>
+        </div>
+
+        <!-- Step 5: Sugestões -->
+        <div id="step5" class="step-hidden animate-step">
+            <h2 class="text-center mb-4">Passo 5: Sugestões</h2>
+            <div class="suggestion-box">
+                <h4>Dieta Recomendada:</h4>
+                <ul>
+                    <li>Consuma mais proteínas e vegetais para manter seu peso ideal.</li>
+                    <li>Mantenha um déficit calórico moderado para perder gordura corporal.</li>
+                </ul>
+                <h4>Treinos Sugeridos:</h4>
+                <ul>
+                    <li>Caminhada rápida ou corrida leve: 30 minutos por dia.</li>
+                    <li>Treino de resistência muscular 3 vezes por semana.</li>
+                </ul>
+            </div>
+            <button class="btn btn-next w-100 mt-3" onclick="goToNextStep()">Finalizar</button>
+        </div>
+
+        <!-- Step 6: Conclusão -->
+        <div id="step6" class="step-hidden animate-step">
+            <h2 class="text-center mb-4">Conclusão</h2>
+            <div class="result-box">
+                <h3>Obrigado por usar a Calculadora de Saúde Completa!</h3>
+                <p>Mantenha-se saudável e continue cuidando de seu corpo e mente!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let step = 1;
+
+        // Função para avançar para o próximo passo
+        function goToNextStep() {
+            document.getElementById(`step${step}`).classList.remove('step-active');
+            document.getElementById(`step${step}`).classList.add('step-hidden');
+            step++;
+            document.getElementById(`step${step}`).classList.remove('step-hidden');
+            document.getElementById(`step${step}`).classList.add('step-active');
+        }
+
+        // Função para calcular TMB, IMC, Peso Ideal, Percentual de Gordura Corporal e Necessidade Calórica
+        function calculateAll() {
+            let age = parseFloat(document.getElementById('age').value);
+            let weight = parseFloat(document.getElementById('weight').value);
+            let height = parseFloat(document.getElementById('height').value);
+            let waist = parseFloat(document.getElementById('waist').value) || 0; // Opcional
+            let neck = parseFloat(document.getElementById('neck').value) || 0; // Opcional
+            let gender = document.getElementById('gender').value;
+
+            // Calcular TMB
+            let tmb;
+            if (gender === 'male') {
+                tmb = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            } else {
+                tmb = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+            }
+            document.getElementById('finalTMB').textContent = tmb.toFixed(2);
+
+            // Calcular IMC
+            let heightInMeters = height / 100;
+            let imc = weight / (heightInMeters * heightInMeters);
+            document.getElementById('finalIMC').textContent = imc.toFixed(2);
+
+            // Calcular Peso Ideal
+            let idealWeight;
+            if (gender === 'male') {
+                idealWeight = 50 + 0.9 * (height - 152.4); // Fórmula de Devine para homens
+            } else {
+                idealWeight = 45.5 + 0.9 * (height - 152.4); // Fórmula de Devine para mulheres
+            }
+            document.getElementById('finalIdealWeight').textContent = idealWeight.toFixed(2);
+
+            // Calcular Percentual de Gordura Corporal (se os valores forem fornecidos)
+            if (waist > 0 && neck > 0) {
+                let bodyFat;
+                if (gender === 'male') {
+                    bodyFat = 86.010 * Math.log10(waist - neck) - 70.041 * Math.log10(height) + 36.76;
+                } else {
+                    bodyFat = 163.205 * Math.log10(waist + neck) - 97.684 * Math.log10(height) - 78.387;
+                }
+                document.getElementById('finalBodyFat').textContent = bodyFat.toFixed(2);
+            } else {
+                document.getElementById('finalBodyFat').textContent = "Não informado";
+            }
+
+            // Calcular Necessidade Calórica Diária (fator de atividade leve: TMB x 1.55)
+            let caloricNeeds = tmb * 1.55;
+            document.getElementById('finalCaloricNeeds').textContent = caloricNeeds.toFixed(2);
+        }
+
+        // Eventos nos formulários de cada etapa
+        document.getElementById('step1Form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            goToNextStep(); // Avança para a próxima etapa
+        });
+
+        document.getElementById('step2Form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            goToNextStep(); // Avança para a próxima etapa
+        });
+
+        document.getElementById('step3Form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            calculateAll(); // Realiza todos os cálculos
+            goToNextStep(); // Avança para os resultados
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
