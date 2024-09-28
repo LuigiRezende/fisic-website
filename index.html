@@ -11,6 +11,11 @@
             background-color: #f8f9fa;
             color: #333;
             font-family: 'Arial', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
         }
         .container {
             margin-top: 50px;
@@ -19,10 +24,18 @@
             border-radius: 10px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
+        .dark-mode .container {
+            background-color: #1f1f1f;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
         .form-control {
             background-color: #f0f2f5;
             border: none;
             border-radius: 8px;
+        }
+        .dark-mode .form-control {
+            background-color: #333;
+            color: #e0e0e0;
         }
         .btn-calculate, .btn-next {
             background-color: #fc2d61;
@@ -41,6 +54,58 @@
             margin-top: 20px;
             text-align: center;
         }
+        .dark-mode .result-box {
+            background-color: #333;
+        }
+        .toggle-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .toggle-switch {
+            margin-left: 10px;
+            width: 50px;
+            height: 25px;
+            background-color: #ccc;
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .toggle-switch.active {
+            background-color: #fc2d61;
+        }
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background-color: #222222;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s;
+        }
+        .toggle-switch.active::before {
+            left: 27px;
+        }
+        .toggle-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 5px;
+            font-size: 16px;
+            transition: opacity 0.3s;
+        }
+        .dark-mode .toggle-icon.sun {
+            color: #c0c0c0;
+            opacity: 1;
+        }
+        .dark-mode .toggle-icon.moon {
+            opacity: 0;
+        }
         .animate-step {
             animation: fadeIn 1s ease-in-out;
         }
@@ -49,16 +114,6 @@
         }
         .step-hidden {
             display: none;
-        }
-        .toggle-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-        }
-        .toggle-switch {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
         @keyframes fadeIn {
             from {
@@ -74,9 +129,20 @@
             border-radius: 10px;
             margin-top: 20px;
         }
+        .dark-mode .suggestion-box {
+            background-color: #444;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Toggle Switch for Theme -->
+    <div class="toggle-container">
+        <div id="themeSwitch" class="toggle-switch">
+            <i class="bi bi-moon-fill toggle-icon moon"></i>
+            <i class="bi bi-sun-fill toggle-icon sun" style="opacity: 0;"></i>
+        </div>
+    </div>
 
     <div class="container">
         <h1 class="text-center mb-5">Calculadora de Saúde - Completa</h1>
@@ -145,19 +211,38 @@
             <button class="btn btn-next w-100 mt-3" onclick="goToNextStep()">Avançar</button>
         </div>
 
-        <!-- Step 5: Sugestões -->
+        <!-- Step 5: Dicas -->
         <div id="step5" class="step-hidden animate-step">
-            <h2 class="text-center mb-4">Passo 5: Sugestões</h2>
+            <h2 class="text-center mb-4">Passo 5: Dicas</h2>
             <div class="suggestion-box">
-                <h4>Dieta Recomendada:</h4>
+                <!-- Benefícios da Musculação -->
+                <h4>Benefícios da Musculação:</h4>
                 <ul>
-                    <li>Consuma mais proteínas e vegetais para manter seu peso ideal.</li>
-                    <li>Mantenha um déficit calórico moderado para perder gordura corporal.</li>
+                    <li>Aumenta a força muscular e a resistência física, facilitando atividades do dia a dia.</li>
+                    <li>Ajuda no controle de peso ao acelerar o metabolismo, promovendo a queima de gordura.</li>
+                    <li>Fortalece os ossos e articulações, reduzindo o risco de osteoporose e lesões.</li>
+                    <li>Melhora a postura e contribui para um melhor equilíbrio corporal.</li>
+                    <li>Aumenta a autoestima e o bem-estar psicológico através da liberação de endorfinas.</li>
                 </ul>
-                <h4>Treinos Sugeridos:</h4>
+
+                <!-- Benefícios de uma Dieta Balanceada -->
+                <h4>Benefícios de uma Dieta Balanceada:</h4>
                 <ul>
-                    <li>Caminhada rápida ou corrida leve: 30 minutos por dia.</li>
-                    <li>Treino de resistência muscular 3 vezes por semana.</li>
+                    <li>Fornece todos os nutrientes essenciais para o bom funcionamento do corpo.</li>
+                    <li>Ajuda a manter um peso saudável, prevenindo o sobrepeso e a obesidade.</li>
+                    <li>Reduz o risco de doenças crônicas como diabetes, hipertensão e doenças cardíacas.</li>
+                    <li>Melhora os níveis de energia e disposição ao longo do dia.</li>
+                    <li>Contribui para uma pele mais saudável e um sistema imunológico fortalecido.</li>
+                </ul>
+
+                <!-- Benefícios de uma Boa Hidratação -->
+                <h4>Benefícios de uma Boa Hidratação:</h4>
+                <ul>
+                    <li>Melhora a função cognitiva, mantendo o cérebro ativo e a concentração em alta.</li>
+                    <li>Auxilia na digestão e no bom funcionamento dos rins, prevenindo cálculos renais.</li>
+                    <li>Regula a temperatura corporal e mantém as articulações lubrificadas.</li>
+                    <li>Contribui para a saúde da pele, mantendo-a mais hidratada e com melhor aparência.</li>
+                    <li>Ajuda na eliminação de toxinas do corpo, promovendo uma sensação de bem-estar.</li>
                 </ul>
             </div>
             <button class="btn btn-next w-100 mt-3" onclick="goToNextStep()">Finalizar</button>
@@ -252,6 +337,22 @@
             goToNextStep(); // Avança para os resultados
         });
 
+        // Toggle Switch for Theme Change
+        const toggleSwitch = document.getElementById('themeSwitch');
+        const sunIcon = document.querySelector('.toggle-icon.sun');
+        const moonIcon = document.querySelector('.toggle-icon.moon');
+
+        toggleSwitch.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            toggleSwitch.classList.toggle('active');
+            if (document.body.classList.contains('dark-mode')) {
+                sunIcon.style.opacity = '1';
+                moonIcon.style.opacity = '0';
+            } else {
+                sunIcon.style.opacity = '0';
+                moonIcon.style.opacity = '1';
+            }
+        });
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
